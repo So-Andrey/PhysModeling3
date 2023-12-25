@@ -5,24 +5,24 @@ import matplotlib.pyplot as plt
 Lx = (2 * 10 ** (-22)) ** (1 / 3)
 Ly = (2 * 10 ** (-22)) ** (1 / 3)
 Lz = (2 * 10 ** (-22)) ** (1 / 3)
-T0 = 300
+T0 = 20
 K = 1.38 * 10 ** (-23)
-R = 5 * 10 ** (-9)
+R = 10 * 10 ** (-9)
 m = 10 ** (-28)
-a = -10 ** (-7)
-b = 10 ** (-66)
+a = -5*10 ** (-7)
+b = 10 ** (-24)
 coord = []
 Angles = []
 dp = 0
 V0 = mt.sqrt(2 * K * T0 / (100 * m))
-t = Lx/100/V0
+t = 1*10**(-30)
 Velocity0 = []
 Acceleration = []
 w = 0
 p = 0
 q = 0
 E = 0
-T = []
+T = [T0]
 Time = []
 for i in range(100):
     coord1 = [rand.uniform(0, (10 ** (-22)) ** (1 / 3)), rand.uniform(0, (10 ** (-22)) ** (1 / 3)),
@@ -61,17 +61,24 @@ for z in range(10000):
         coord[i][1] = coord[i][1] + Velocity0[i][1] * t
         coord[i][2] = coord[i][2] + Velocity0[i][2] * t
         V0 = mt.sqrt(Velocity0[i][0] ** 2 + Velocity0[i][1] ** 2 + Velocity0[i][2] ** 2)
-        if (coord[i][0] >= Lx or coord[i][0] <= 0):
-            Velocity0[i][0] = -Velocity0[i][0]
-            coord[i][0]=coord[i][0]+Velocity0[i][0]*t
-            if (z >= 1900):
-                dp = dp + 2 * m * Velocity0[i][0]
-        if (coord[i][1] >= Ly or coord[i][1] <= 0) :
-            Velocity0[i][1] = -Velocity0[i][1]
-            coord[i][1] = coord[i][1] + Velocity0[i][1] * t
-        if (coord[i][2] >= Lz or coord[i][2] <= 0):
-            Velocity0[i][2] = -Velocity0[i][2]
-            coord[i][2] = coord[i][2] + Velocity0[i][2] * t
+        if (coord[i][0] <= 0):
+            Velocity0[i][0] = abs(Velocity0[i][0])
+            coord[i][0] = 0.0 + Velocity0[i][0] * t
+        if (coord[i][0] >= Lx):
+            Velocity0[i][0] = -abs(Velocity0[i][0])
+            coord[i][0] = Lx + Velocity0[i][0] * t
+        if (coord[i][1] <= 0):
+            Velocity0[i][1] = abs(Velocity0[i][1])
+            coord[i][1] = 0.0 + Velocity0[i][1] * t
+        if (coord[i][1] >= Ly):
+            Velocity0[i][1] = -abs(Velocity0[i][1])
+            coord[i][1] = Ly + Velocity0[i][1] * t
+        if (coord[i][2] <= 0):
+            Velocity0[i][2] = abs(Velocity0[i][2])
+            coord[i][2] = 0.0 + Velocity0[i][2] * t
+        if (coord[i][2] >= Lz):
+            Velocity0[i][2] = -abs(Velocity0[i][2])
+            coord[i][2] = Lz + Velocity0[i][2] * t
         Acceleration[i][0] = 0
         Acceleration[i][1] = 0
         Acceleration[i][2] = 0
@@ -79,12 +86,10 @@ for z in range(10000):
         Time.append(t * z)
         for l in range(100):
             E = E + m * (Velocity0[l][0] ** 2 + Velocity0[l][1] ** 2 + Velocity0[l][2] ** 2) / 2
-
-        T.append(2 * E / (100 * 3 * K))
+        T.append(round(2 * E / (100 * 3 * K),3))
         E = 0
         print(coord[0][0])
-P = dp / (100 * Ly * Lx)
-print(P)
+T.pop()
 plt.figure()
 plt.plot(Time, T, 'o-r')
 plt.xlabel('Время, с')
